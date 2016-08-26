@@ -13,16 +13,16 @@ namespace OpenGL {
             this.id = id;
         }
 
-        public static VBO CreateNewVBO(Vector2[] vertices) {
+        public static VBO CreateNewVBO(ref Vertex[] vertices) {
             int id = GL.GenBuffer();
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, id);
-            GL.BufferData<Vector2>(BufferTarget.ArrayBuffer, (IntPtr)(Vector2.SizeInBytes * vertices.Length), vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData<Vertex>(BufferTarget.ArrayBuffer, (IntPtr)(Vertex.SizeInBytes * vertices.Length), vertices, BufferUsageHint.StaticDraw);
 
             return new VBO(id);
         }
 
-        public int Id { get; set; }
+        public int Id { get { return id; } }
 
 
     }

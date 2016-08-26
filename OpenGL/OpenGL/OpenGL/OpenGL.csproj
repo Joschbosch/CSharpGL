@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Vertex.cs" />
     <Compile Include="ContentPipe.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Program.cs" />
