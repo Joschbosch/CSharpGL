@@ -53,6 +53,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CjClutter.ObjLoader.Loader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>resources\CjClutter.ObjLoader.Loader.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.9\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
@@ -72,8 +76,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FpsMonitor.cs" />
     <Compile Include="GUI\content\ContentManager.cs" />
+    <Compile Include="GUI\content\OBJToMeshConverter.cs" />
     <Compile Include="GUI\content\OpenGLLoader.cs" />
+    <Compile Include="GUI\data\Mesh.cs" />
     <Compile Include="GUI\data\VertexFloatBuffer.cs" />
     <Compile Include="GUI\input\Input.cs" />
     <Compile Include="GUI\OpenGLWindow.cs" />
@@ -89,6 +96,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="resources\CjClutter.ObjLoader.Loader.dll" />
+    <None Include="resources\model\cube.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\model\cube.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="resources\textures\wall.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

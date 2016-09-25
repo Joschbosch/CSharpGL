@@ -1,10 +1,10 @@
 ﻿namespace OpenGL_Test_Environment.GUI.shader {
     class SimpleShader : Shader {
         public SimpleShader() : base("simple") {
-            bindAttribute("vertex_position");
-            bindAttribute("vertex_color");
+            bindAttribute("vertexPosition_modelspace");
+            bindAttribute("vertexColor");
             bindAttribute("vertex_normal");
-            bindAttribute("vertex_texcoord");
+            bindAttribute("vertexUV");
         }
     }
 }

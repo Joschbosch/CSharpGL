@@ -169,73 +169,76 @@ namespace OpenGL_Test_Environment.GUI.data {
                 return;
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, id_vbo);
+            int vertexPosition = shader.GetAttributeLocation("vertexPosition_modelspace");
+            int vertexColor = shader.GetAttributeLocation("vertexColor");
+            int vertexUV = shader.GetAttributeLocation("vertexUV");
 
             switch (Format) {
                 case VertexFormat.XY:
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_position"));
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_position"), 2, VertexAttribPointerType.Float, false, Stride, 0);
+                    GL.EnableVertexAttribArray(vertexPosition);
+                    GL.VertexAttribPointer(vertexPosition, 2, VertexAttribPointerType.Float, false, Stride, 0);
                     break;
                 case VertexFormat.XY_COLOR:
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_position"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_color"));
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_position"), 2, VertexAttribPointerType.Float, false, Stride, 0);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_color"), 4, VertexAttribPointerType.Float, false, Stride, 8);
+                    GL.EnableVertexAttribArray(vertexPosition);
+                    GL.EnableVertexAttribArray(vertexColor);
+                    GL.VertexAttribPointer(vertexPosition, 2, VertexAttribPointerType.Float, false, Stride, 0);
+                    GL.VertexAttribPointer(vertexColor, 4, VertexAttribPointerType.Float, false, Stride, 8);
                     break;
                 case VertexFormat.XY_UV:
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_position"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_texcoord"));
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_position"), 2, VertexAttribPointerType.Float, false, Stride, 0);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_texcoord"), 2, VertexAttribPointerType.Float, false, Stride, 8);
+                    GL.EnableVertexAttribArray(vertexPosition);
+                    GL.EnableVertexAttribArray(vertexUV);
+                    GL.VertexAttribPointer(vertexPosition, 2, VertexAttribPointerType.Float, false, Stride, 0);
+                    GL.VertexAttribPointer(vertexUV, 2, VertexAttribPointerType.Float, false, Stride, 8);
                     break;
                 case VertexFormat.XY_UV_COLOR:
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_position"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_texcoord"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_color"));
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_position"), 2, VertexAttribPointerType.Float, false, Stride, 0);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_texcoord"), 2, VertexAttribPointerType.Float, false, Stride, 8);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_color"), 4, VertexAttribPointerType.Float, false, Stride, 16);
+                    GL.EnableVertexAttribArray(vertexPosition);
+                    GL.EnableVertexAttribArray(vertexUV);
+                    GL.EnableVertexAttribArray(vertexColor);
+                    GL.VertexAttribPointer(vertexPosition, 2, VertexAttribPointerType.Float, false, Stride, 0);
+                    GL.VertexAttribPointer(vertexUV, 2, VertexAttribPointerType.Float, false, Stride, 8);
+                    GL.VertexAttribPointer(vertexColor, 4, VertexAttribPointerType.Float, false, Stride, 16);
                     break;
                 case VertexFormat.XYZ:
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_position"));
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_position"), 3, VertexAttribPointerType.Float, false, Stride, 0);
+                    GL.EnableVertexAttribArray(vertexPosition);
+                    GL.VertexAttribPointer(vertexPosition, 3, VertexAttribPointerType.Float, false, Stride, 0);
                     break;
                 case VertexFormat.XYZ_COLOR:
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_position"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_color"));
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_position"), 3, VertexAttribPointerType.Float, false, Stride, 0);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_color"), 4, VertexAttribPointerType.Float, false, Stride, 12);
+                    GL.EnableVertexAttribArray(vertexPosition);
+                    GL.EnableVertexAttribArray(vertexColor);
+                    GL.VertexAttribPointer(vertexPosition, 3, VertexAttribPointerType.Float, false, Stride, 0);
+                    GL.VertexAttribPointer(vertexColor, 4, VertexAttribPointerType.Float, false, Stride, 12);
                     break;
                 case VertexFormat.XYZ_UV:
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_position"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_texcoord"));
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_position"), 3, VertexAttribPointerType.Float, false, Stride, 0);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_texcoord"), 2, VertexAttribPointerType.Float, false, Stride, 12);
+                    GL.EnableVertexAttribArray(vertexPosition);
+                    GL.EnableVertexAttribArray(vertexUV);
+                    GL.VertexAttribPointer(vertexPosition, 3, VertexAttribPointerType.Float, false, Stride, 0);
+                    GL.VertexAttribPointer(vertexUV, 2, VertexAttribPointerType.Float, false, Stride, 12);
                     break;
                 case VertexFormat.XYZ_UV_COLOR:
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_position"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_texcoord"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_color"));
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_position"), 3, VertexAttribPointerType.Float, false, Stride, 0);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_texcoord"), 2, VertexAttribPointerType.Float, false, Stride, 12);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_color"), 4, VertexAttribPointerType.Float, false, Stride, 20);
+                    GL.EnableVertexAttribArray(vertexPosition);
+                    GL.EnableVertexAttribArray(vertexUV);
+                    GL.EnableVertexAttribArray(vertexColor);
+                    GL.VertexAttribPointer(vertexPosition, 3, VertexAttribPointerType.Float, false, Stride, 0);
+                    GL.VertexAttribPointer(vertexUV, 2, VertexAttribPointerType.Float, false, Stride, 12);
+                    GL.VertexAttribPointer(vertexColor, 4, VertexAttribPointerType.Float, false, Stride, 20);
                     break;
                 case VertexFormat.XYZ_NORMAL_UV:
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_position"));
+                    GL.EnableVertexAttribArray(vertexPosition);
                     GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_normal"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_color"));
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_position"), 3, VertexAttribPointerType.Float, false, Stride, 0);
+                    GL.EnableVertexAttribArray(vertexColor);
+                    GL.VertexAttribPointer(vertexPosition, 3, VertexAttribPointerType.Float, false, Stride, 0);
                     GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_normal"), 3, VertexAttribPointerType.Float, false, Stride, 12);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_texcoord"), 2, VertexAttribPointerType.Float, false, Stride, 24);
+                    GL.VertexAttribPointer(vertexUV, 2, VertexAttribPointerType.Float, false, Stride, 24);
                     break;
                 case VertexFormat.XYZ_NORMAL_UV_COLOR:
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_position"));
+                    GL.EnableVertexAttribArray(vertexPosition);
                     GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_normal"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_texcoord"));
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_color"));
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_position"), 3, VertexAttribPointerType.Float, false, Stride, 0);
+                    GL.EnableVertexAttribArray(vertexUV);
+                    GL.EnableVertexAttribArray(vertexColor);
+                    GL.VertexAttribPointer(vertexPosition, 3, VertexAttribPointerType.Float, false, Stride, 0);
                     GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_normal"), 3, VertexAttribPointerType.Float, false, Stride, 12);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_texcoord"), 2, VertexAttribPointerType.Float, false, Stride, 24);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_color"), 4, VertexAttribPointerType.Float, false, Stride, 32);
+                    GL.VertexAttribPointer(vertexUV, 2, VertexAttribPointerType.Float, false, Stride, 24);
+                    GL.VertexAttribPointer(vertexColor, 4, VertexAttribPointerType.Float, false, Stride, 32);
                     break;
             }
 

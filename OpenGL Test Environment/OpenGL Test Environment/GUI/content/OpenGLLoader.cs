@@ -41,6 +41,9 @@ namespace OpenGL_Test_Environment.GUI.content {
             return newTexture;
         }
 
+        public static void loadModel() {
+
+        }
 
         public static void dispose() {
             foreach (var item in loadedTextures) {
