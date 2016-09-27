@@ -29,9 +29,9 @@ namespace OpenGL_Test_Environment.GUI.shader {
 
         public Shader(string baseDir) {
             this.BaseDir = baseDir;
-            VertexSourceLocation = baseDir + "/vertex.glsl";
-            GeometrySourceLocation = baseDir + "/geometry.glsl";
-            FragmentSourceLocation = baseDir + "/fragment.glsl";
+            VertexSourceLocation = baseDir + "/" + baseDir + ".vert";
+            GeometrySourceLocation = baseDir + "/" + baseDir + ".geom";
+            FragmentSourceLocation = baseDir + "/" + baseDir + ".frag";
             attributes = new Dictionary<string, int>();
             Build();
         }
@@ -97,37 +97,37 @@ namespace OpenGL_Test_Environment.GUI.shader {
         }
 
 
-        public void loadUniform(string attribute, float value) {
-            GL.Uniform1(getUniformLocation(attribute), value);
+        public void LoadUniform(string attribute, float value) {
+            GL.Uniform1(GetUniformLocation(attribute), value);
         }
-        public void loadUniform(string attribute, int value) {
-            GL.Uniform1(getUniformLocation(attribute), value);
+        public void LoadUniform(string attribute, int value) {
+            GL.Uniform1(GetUniformLocation(attribute), value);
         }
-        public void loadUniform(string attribute, Vector2 value) {
-            GL.Uniform2(getUniformLocation(attribute), value);
+        public void LoadUniform(string attribute, Vector2 value) {
+            GL.Uniform2(GetUniformLocation(attribute), value);
         }
-        public void loadUniform(string attribute, Vector3 value) {
-            GL.Uniform3(getUniformLocation(attribute), value);
+        public void LoadUniform(string attribute, Vector3 value) {
+            GL.Uniform3(GetUniformLocation(attribute), value);
         }
-        public void loadUniform(string attribute, Vector4 value) {
-            GL.Uniform4(getUniformLocation(attribute), value);
+        public void LoadUniform(string attribute, Vector4 value) {
+            GL.Uniform4(GetUniformLocation(attribute), value);
         }
-        public void loadUniform(string attribute, bool value) {
+        public void LoadUniform(string attribute, bool value) {
             float toLoad = 0.0f;
             if (value) {
                 toLoad = 1.0f;
             }
-            loadUniform(attribute, toLoad);
+            LoadUniform(attribute, toLoad);
         }
 
-        public void loadMatrix(string attribute, Matrix4 value) {
-            GL.UniformMatrix4(getUniformLocation(attribute), false, ref value);
+        public void LoadMatrix(string attribute, Matrix4 value) {
+            GL.UniformMatrix4(GetUniformLocation(attribute), false, ref value);
         }
 
-        public void loadMatrix(string attribute, Matrix3 value) {
-            GL.UniformMatrix3(getUniformLocation(attribute), false, ref value);
+        public void LoadMatrix(string attribute, Matrix3 value) {
+            GL.UniformMatrix3(GetUniformLocation(attribute), false, ref value);
         }
-        public int getUniformLocation(string attribute) {
+        public int GetUniformLocation(string attribute) {
             return GL.GetUniformLocation(Program, attribute);
         }
 
@@ -155,7 +155,7 @@ namespace OpenGL_Test_Environment.GUI.shader {
                 return attributes[attribute];
             } else {
                 logger.Error("Attribute not found: " + attribute);
-                throw new ApplicationException("Attribute not found: " + attribute);
+                return -1;
             }
         }
 

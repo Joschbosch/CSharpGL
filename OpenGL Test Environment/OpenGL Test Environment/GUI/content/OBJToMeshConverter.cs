@@ -59,6 +59,7 @@ namespace OpenGL_Test_Environment.GUI.content {
                 var texture = _loadResult.Textures[faceVertex.TextureIndex - 1];
                 _mesh.Triangles.Add(new Vector3(vertex.X, vertex.Y, vertex.Z));
                 _mesh.UV.Add(new Vector2(texture.X, texture.Y));
+
             }
         }
 

@@ -101,7 +101,9 @@ namespace OpenGL_Test_Environment.GUI.data {
         public void Set(float[] vertices, uint[] indices) {
             Clear();
             vertex_data = vertices;
+            vertex_position = vertex_data.Length;
             index_data = indices;
+            index_position = index_data.Length;
         }
 
         /// <summary>
@@ -111,7 +113,6 @@ namespace OpenGL_Test_Environment.GUI.data {
         public void Load() {
             if (IsLoaded)
                 return;
-
             //VBO
             GL.GenBuffers(1, out id_vbo);
             GL.BindBuffer(BufferTarget.ArrayBuffer, id_vbo);
@@ -172,7 +173,7 @@ namespace OpenGL_Test_Environment.GUI.data {
             int vertexPosition = shader.GetAttributeLocation("vertexPosition_modelspace");
             int vertexColor = shader.GetAttributeLocation("vertexColor");
             int vertexUV = shader.GetAttributeLocation("vertexUV");
-
+            int vertexNormal = shader.GetAttributeLocation("vertex_normal");
             switch (Format) {
                 case VertexFormat.XY:
                     GL.EnableVertexAttribArray(vertexPosition);
@@ -224,19 +225,19 @@ namespace OpenGL_Test_Environment.GUI.data {
                     break;
                 case VertexFormat.XYZ_NORMAL_UV:
                     GL.EnableVertexAttribArray(vertexPosition);
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_normal"));
-                    GL.EnableVertexAttribArray(vertexColor);
+                    GL.EnableVertexAttribArray(vertexNormal);
+                    GL.EnableVertexAttribArray(vertexUV);
                     GL.VertexAttribPointer(vertexPosition, 3, VertexAttribPointerType.Float, false, Stride, 0);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_normal"), 3, VertexAttribPointerType.Float, false, Stride, 12);
+                    GL.VertexAttribPointer(vertexNormal, 3, VertexAttribPointerType.Float, false, Stride, 12);
                     GL.VertexAttribPointer(vertexUV, 2, VertexAttribPointerType.Float, false, Stride, 24);
                     break;
                 case VertexFormat.XYZ_NORMAL_UV_COLOR:
                     GL.EnableVertexAttribArray(vertexPosition);
-                    GL.EnableVertexAttribArray(shader.GetAttributeLocation("vertex_normal"));
+                    GL.EnableVertexAttribArray(vertexNormal);
                     GL.EnableVertexAttribArray(vertexUV);
                     GL.EnableVertexAttribArray(vertexColor);
                     GL.VertexAttribPointer(vertexPosition, 3, VertexAttribPointerType.Float, false, Stride, 0);
-                    GL.VertexAttribPointer(shader.GetAttributeLocation("vertex_normal"), 3, VertexAttribPointerType.Float, false, Stride, 12);
+                    GL.VertexAttribPointer(vertexNormal, 3, VertexAttribPointerType.Float, false, Stride, 12);
                     GL.VertexAttribPointer(vertexUV, 2, VertexAttribPointerType.Float, false, Stride, 24);
                     GL.VertexAttribPointer(vertexColor, 4, VertexAttribPointerType.Float, false, Stride, 32);
                     break;

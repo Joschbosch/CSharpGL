@@ -83,10 +83,12 @@
     <Compile Include="GUI\data\Mesh.cs" />
     <Compile Include="GUI\data\VertexFloatBuffer.cs" />
     <Compile Include="GUI\input\Input.cs" />
+    <Compile Include="GUI\objects\LightSource.cs" />
     <Compile Include="GUI\OpenGLWindow.cs" />
     <Compile Include="GUI\shader\Shader.cs" />
+    <Compile Include="GUI\shader\LampShader.cs" />
     <Compile Include="GUI\shader\SimpleShader.cs" />
-    <Compile Include="GUI\Texture2D.cs" />
+    <Compile Include="GUI\data\Texture2D.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -97,19 +99,34 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="resources\CjClutter.ObjLoader.Loader.dll" />
+    <Content Include="resources\textures\emission.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\crate_spec.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\crate.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="resources\model\cube.mtl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="resources\model\cube.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="resources\shader\lamp\lamp.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\shader\lamp\lamp.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="resources\textures\wall.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="resources\shader\simple\fragment.glsl">
+    <None Include="resources\shader\simple\simple.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="resources\shader\simple\vertex.glsl">
+    <None Include="resources\shader\simple\simple.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
