@@ -85,6 +85,7 @@
     <Compile Include="GUI\input\Input.cs" />
     <Compile Include="GUI\objects\LightSource.cs" />
     <Compile Include="GUI\OpenGLWindow.cs" />
+    <Compile Include="GUI\shader\SelectionShader.cs" />
     <Compile Include="GUI\shader\Shader.cs" />
     <Compile Include="GUI\shader\LampShader.cs" />
     <Compile Include="GUI\shader\SimpleShader.cs" />
@@ -99,19 +100,48 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="resources\CjClutter.ObjLoader.Loader.dll" />
-    <Content Include="resources\textures\emission.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\textures\crate_spec.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\textures\crate.bmp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="resources\model\cube.mtl">
+    <None Include="resources\shader\selection\selection.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="resources\model\cube.obj">
+    <None Include="resources\shader\selection\selection.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="resources\textures\misc\emission.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\misc\crate_spec.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\misc\crate.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\nanosuit\arm_dif.png" />
+    <Content Include="resources\textures\nanosuit\arm_showroom_ddn.png" />
+    <Content Include="resources\textures\nanosuit\arm_showroom_spec.png" />
+    <Content Include="resources\textures\nanosuit\body_dif.png" />
+    <Content Include="resources\textures\nanosuit\body_showroom_ddn.png" />
+    <Content Include="resources\textures\nanosuit\body_showroom_spec.png" />
+    <Content Include="resources\textures\nanosuit\glass_ddn.png" />
+    <Content Include="resources\textures\nanosuit\glass_dif.png" />
+    <Content Include="resources\textures\nanosuit\hand_dif.png" />
+    <Content Include="resources\textures\nanosuit\hand_showroom_ddn.png" />
+    <Content Include="resources\textures\nanosuit\hand_showroom_spec.png" />
+    <Content Include="resources\textures\nanosuit\helmet_diff.png" />
+    <Content Include="resources\textures\nanosuit\helmet_showroom_ddn.png" />
+    <Content Include="resources\textures\nanosuit\helmet_showroom_spec.png" />
+    <Content Include="resources\textures\nanosuit\leg_dif.png" />
+    <Content Include="resources\textures\nanosuit\leg_showroom_ddn.png" />
+    <Content Include="resources\textures\nanosuit\leg_showroom_spec.png" />
+    <None Include="resources\model\cube\cube.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\model\cube\cube.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\model\nanosuit\nanosuit.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\model\nanosuit\nanosuit.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="resources\shader\lamp\lamp.frag">
@@ -120,7 +150,7 @@
     <None Include="resources\shader\lamp\lamp.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="resources\textures\wall.jpg">
+    <None Include="resources\textures\misc\wall.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="resources\shader\simple\simple.frag">
@@ -133,7 +163,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="resources\textures\hellknight.png">
+    <None Include="resources\textures\misc\hellknight.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />

@@ -29,10 +29,10 @@ namespace OpenGL_Test_Environment.GUI.content {
 
         }
 
-        public static VertexFloatBuffer loadModel(string path, VertexFormat format) {
+        public static VertexFloatBuffer loadModel(string modelname, VertexFormat format) {
             var objLoaderFactory = new ObjLoaderFactory();
             var objLoader = objLoaderFactory.Create(new MaterialNullStreamProvider());
-            var fileStream = new FileStream("resources/model/" + path, FileMode.Open);
+            var fileStream = new FileStream("resources/model/" + modelname + "/" + modelname + ".obj", FileMode.Open);
             var result = objLoader.Load(fileStream);
             fileStream.Close();
             IList<Mesh> meshes = new OBJToMeshConverter().Convert(result);

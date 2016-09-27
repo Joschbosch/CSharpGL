@@ -33,7 +33,6 @@ namespace OpenGL_Test_Environment.GUI.content {
 
             bmp.UnlockBits(data);
 
-
             loadedTextures.Add(path, newTexture);
             logger.Info("Loaded texture \"{0}\" with size {1}x{2} into memory, assigned id {3}.", path, data.Width, data.Height, id);
             GL.BindTexture(TextureTarget.Texture2D, 0);

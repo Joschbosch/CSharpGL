@@ -171,6 +171,7 @@ namespace OpenGL_Test_Environment.GUI.data {
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, id_vbo);
             int vertexPosition = shader.GetAttributeLocation("vertexPosition_modelspace");
+
             int vertexColor = shader.GetAttributeLocation("vertexColor");
             int vertexUV = shader.GetAttributeLocation("vertexUV");
             int vertexNormal = shader.GetAttributeLocation("vertex_normal");
@@ -245,7 +246,6 @@ namespace OpenGL_Test_Environment.GUI.data {
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, id_ebo);
             GL.DrawElements(DrawMode, index_position, DrawElementsType.UnsignedInt, 0);
-
             GL.DisableVertexAttribArray(0);
             GL.DisableVertexAttribArray(1);
             GL.DisableVertexAttribArray(2);

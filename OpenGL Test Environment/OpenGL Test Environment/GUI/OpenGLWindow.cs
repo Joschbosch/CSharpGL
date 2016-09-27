@@ -1,5 +1,4 @@
 ﻿using NLog;
-using ObjLoader.Loader.Loaders;
 using OpenGL_Test_Environment.GUI.content;
 using OpenGL_Test_Environment.GUI.data;
 using OpenGL_Test_Environment.GUI.input;
@@ -11,8 +10,6 @@ using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 
 namespace OpenGL_Test_Environment.GUI {
     class OpenGLWindow : GameWindow {
@@ -24,6 +21,8 @@ namespace OpenGL_Test_Environment.GUI {
 
         private Shader objectShader;
         private Shader lightShader;
+        private Shader selectionShader;
+
         private Dictionary<string, VertexFloatBuffer> models;
         private List<LightSource> lights = new List<LightSource>();
         private Matrix4 ProjectionMatrix;
@@ -48,7 +47,7 @@ namespace OpenGL_Test_Environment.GUI {
             ModelMatrix = new Matrix4();
             ViewMatrix = new Matrix4();
             fpsm = new FpsMonitor();
-            cameraPosition = new Vector3(0.0f, 0.0f, 5.0f);
+            cameraPosition = new Vector3(0.0f, 0.0f, 6.0f);
         }
 
         protected override void OnLoad(EventArgs e) {
@@ -56,22 +55,25 @@ namespace OpenGL_Test_Environment.GUI {
 
             objectShader = new SimpleShader();
             lightShader = new LampShader();
-            models = new Dictionary<string, VertexFloatBuffer>();
-            models.Add("cube", ContentManager.loadModel("cube.obj", VertexFormat.XYZ_NORMAL_UV));
-            models.Add("lamp", ContentManager.loadModel("cube.obj", VertexFormat.XYZ));
+            selectionShader = new SelectionShader();
 
-            texture = OpenGLLoader.loadTexture("crate.bmp");
+            models = new Dictionary<string, VertexFloatBuffer>();
+            models.Add("cube", ContentManager.loadModel("cube", VertexFormat.XYZ_NORMAL_UV));
+            models.Add("lamp", ContentManager.loadModel("cube", VertexFormat.XYZ));
+            //models.Add("suit", ContentManager.loadModel("nanosuit", VertexFormat.XYZ_NORMAL_UV));
+
+            texture = OpenGLLoader.loadTexture("misc/crate.bmp");
             texture.setWrapping(TextureWrapMode.MirroredRepeat);
-            texture_spec = OpenGLLoader.loadTexture("crate_spec.bmp");
+            texture_spec = OpenGLLoader.loadTexture("misc/crate_spec.bmp");
             texture_spec.setWrapping(TextureWrapMode.MirroredRepeat);
-            texture_emission = OpenGLLoader.loadTexture("emission.bmp");
+            texture_emission = OpenGLLoader.loadTexture("misc/emission.bmp");
             texture_emission.setWrapping(TextureWrapMode.MirroredRepeat);
 
-            lights = new List<LightSource>();
-            lights.Add(new LightSource(new Vector3(0.0f, 0.0f, 5.0f), new Vector3(1f, 1f, 1f), 2f));
-            lights[0].Direction = new Vector3(0, 0, -1);
+            addLights();
+
 
         }
+
 
 
         protected override void OnUpdateFrame(FrameEventArgs e) {
@@ -98,14 +100,17 @@ namespace OpenGL_Test_Environment.GUI {
             objectShader.LoadMatrix("viewMatrix", ViewMatrix);
             objectShader.LoadMatrix("projectionMatrix", ProjectionMatrix);
             objectShader.LoadUniform("cameraPosition", cameraPosition);
-
-
-
             objectShader.Stop();
+
             lightShader.Start();
-            objectShader.LoadMatrix("viewMatrix", ViewMatrix);
-            objectShader.LoadMatrix("projectionMatrix", ProjectionMatrix);
+            lightShader.LoadMatrix("viewMatrix", ViewMatrix);
+            lightShader.LoadMatrix("projectionMatrix", ProjectionMatrix);
             lightShader.Stop();
+
+            selectionShader.Start();
+            selectionShader.LoadMatrix("viewMatrix", ViewMatrix);
+            selectionShader.LoadMatrix("projectionMatrix", ProjectionMatrix);
+            selectionShader.Stop();
 
         }
         private float rotationOverTime = 0f;
@@ -114,37 +119,99 @@ namespace OpenGL_Test_Environment.GUI {
         protected override void OnRenderFrame(FrameEventArgs e) {
             base.OnRenderFrame(e);
 
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(Color.Black);
+
+
+
+            drawCrates();
+            drawLightBulbs();
+
+            rotationOverTime += 0.01f;
+
+            this.SwapBuffers();
+            fpsm.Update();
+            //fpsm.Draw();
+        }
+
+
+        private void addLightInformation(List<LightSource> lights, Shader objectShader) {
+
+            int spotCount = 0;
+            int directionalCount = 0;
+            int pointCount = 0;
+            foreach (var light in lights) {
+                if (light.LightType == LightSource.TYPE_POINT_LIGHT) {
+                    String pointString = "pointLights[" + pointCount + "]";
+                    objectShader.LoadUniform(pointString + ".position", light.Position);
+                    objectShader.LoadUniform(pointString + ".ambient", light.Ambient);
+                    objectShader.LoadUniform(pointString + ".diffuse", light.Diffuse);
+                    objectShader.LoadUniform(pointString + ".specular", light.Specular);
+                    objectShader.LoadUniform(pointString + ".attenuation", light.Attenuation);
+                    pointCount++;
+                } else if (light.LightType == LightSource.TYPE_DIRECTIONAL_LIGHT) {
+                    String directionalString = "dirLights[" + directionalCount + "]";
+                    objectShader.LoadUniform(directionalString + ".direction", light.Direction);
+                    objectShader.LoadUniform(directionalString + ".ambient", light.Ambient);
+                    objectShader.LoadUniform(directionalString + ".diffuse", light.Diffuse);
+                    objectShader.LoadUniform(directionalString + ".specular", light.Specular);
+                    directionalCount++;
+                } else if (light.LightType == LightSource.TYPE_SPOT_LIGHT) {
+                    String spotString = "spotLights[" + spotCount + "]";
+                    objectShader.LoadUniform(spotString + ".position", light.Position);
+                    objectShader.LoadUniform(spotString + ".direction", light.Direction);
+                    objectShader.LoadUniform(spotString + ".ambient", light.Ambient);
+                    objectShader.LoadUniform(spotString + ".diffuse", light.Diffuse);
+                    objectShader.LoadUniform(spotString + ".specular", light.Specular);
+                    objectShader.LoadUniform(spotString + ".attenuation", light.Attenuation);
+                    objectShader.LoadUniform(spotString + ".cutOff", light.CutOff);
+                    objectShader.LoadUniform(spotString + ".outerCutOff", light.outerCutOff);
+                    spotCount++;
+                }
+            }
+
+            objectShader.LoadUniform("pointCount", pointCount);
+            objectShader.LoadUniform("directionalCount", directionalCount);
+            objectShader.LoadUniform("spotCount", spotCount);
+
+
+        }
+        private void drawLightBulbs() {
+            lightShader.Start();
+            VertexFloatBuffer model = models["lamp"];
+            foreach (var lamp in lights) {
+                if (lamp.LightType == LightSource.TYPE_POINT_LIGHT) {
+                    Matrix4 translation = Matrix4.CreateTranslation(lamp.Position);
+                    Matrix4 scale = Matrix4.CreateScale(0.2f);
+                    ModelMatrix = Matrix4.Identity;
+                    ModelMatrix = Matrix4.Mult(ModelMatrix, scale);
+                    ModelMatrix = Matrix4.Mult(ModelMatrix, translation);
+                    lightShader.LoadMatrix("modelMatrix", ModelMatrix);
+                    model.Bind(lightShader);
+                }
+            }
+            lightShader.Stop();
+        }
+
+
+        private void drawCrates() {
             GL.Enable(EnableCap.DepthTest);
-            GL.DepthFunc(DepthFunction.Less);
-            GL.Enable(EnableCap.Texture2D);
+            GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Replace);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+
+
             GL.Enable(EnableCap.Blend);
-            GL.Disable(EnableCap.CullFace);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.Enable(EnableCap.Texture2D);
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, texture.ID);
             GL.ActiveTexture(TextureUnit.Texture1);
             GL.BindTexture(TextureTarget.Texture2D, texture_spec.ID);
             GL.ActiveTexture(TextureUnit.Texture2);
             GL.BindTexture(TextureTarget.Texture2D, texture_emission.ID);
+            GL.StencilFunc(StencilFunction.Always, 1, 0xff);
+            GL.StencilMask(0xff);
             objectShader.Start();
-            //Vector3 newcolor = new Vector3();
-            //newcolor.X = (float)Math.Sin(rotationOverTime * 2.0f);
-            //newcolor.Y = (float)Math.Sin(rotationOverTime * 0.7f);
-            //newcolor.Z = (float)Math.Sin(rotationOverTime * 1.3f);
-            //lights[0].color = newcolor;
-
-            objectShader.LoadUniform("light.position", new Vector4(lights[0].Position, lights[0].LightType));
-            objectShader.LoadUniform("light.direction", lights[0].Direction);
-            objectShader.LoadUniform("light.ambient", Vector3.Multiply(lights[0].Color, 0.2f));
-            objectShader.LoadUniform("light.diffuse", Vector3.Multiply(lights[0].Color, 0.5f));
-            objectShader.LoadUniform("light.specular", new Vector3(1.0f, 1.0f, 1.0f));
-            objectShader.LoadUniform("light.attenuationParameter", new Vector3(1.0f, 0.09f, 0.032f));
-            //objectShader.LoadUniform("light.cutOff", (float)Math.Cos((Math.PI / 180) * 12.5f));
-            //objectShader.LoadUniform("light.outerCutOff", (float)Math.Cos((Math.PI / 180) * 17.5f));
-            objectShader.LoadUniform("light.cutOff", 0.91f);
-            objectShader.LoadUniform("light.outerCutOff", 0.82f);
+            addLightInformation(lights, objectShader);
 
             ModelMatrix = Matrix4.Identity;
             Vector3[] positions =
@@ -172,27 +239,84 @@ namespace OpenGL_Test_Environment.GUI {
                 objectShader.LoadUniform("material.shininess", 32.0f);
                 model.Bind(objectShader);
             }
+
             objectShader.Stop();
-            lightShader.Start();
-            model = models["lamp"];
-            foreach (var lamp in lights) {
-                Matrix4 translation = Matrix4.CreateTranslation(lamp.Position);
-                Matrix4 scale = Matrix4.CreateScale(0.2f);
+
+
+            GL.StencilFunc(StencilFunction.Notequal, 1, 0xff);
+            GL.StencilMask(0x00);
+            GL.Disable(EnableCap.DepthTest);
+            selectionShader.Start();
+            for (int i = 0; i < 5; i++) {
+                Matrix4 cubeTranslation = Matrix4.CreateTranslation(positions[i]);
+                Matrix4 rotation;
+                if (i % 2 == 1) {
+                    rotation = Matrix4.CreateFromQuaternion(rotations[i]);
+                } else {
+                    rotation = Matrix4.CreateFromQuaternion(Quaternion.Multiply(rotations[i], new Quaternion(rotationOverTime, 0, rotationOverTime)));
+
+                }
+                Matrix4 cubeScale = Matrix4.CreateScale(1.5f);
                 ModelMatrix = Matrix4.Identity;
-                ModelMatrix = Matrix4.Mult(ModelMatrix, scale);
-                ModelMatrix = Matrix4.Mult(ModelMatrix, translation);
-                lightShader.LoadMatrix("modelMatrix", ModelMatrix);
-                //model.Bind(lightShader);
+                ModelMatrix = Matrix4.Mult(ModelMatrix, cubeScale);
+                ModelMatrix = Matrix4.Mult(ModelMatrix, rotation);
+                ModelMatrix = Matrix4.Mult(ModelMatrix, cubeTranslation);
+                selectionShader.LoadMatrix("modelMatrix", ModelMatrix);
+                model.Bind(selectionShader);
             }
-            lightShader.Stop();
+            selectionShader.Stop();
+            GL.StencilMask(0xff);
+            GL.Enable(EnableCap.DepthTest);
 
-            rotationOverTime += 0.01f;
 
-            GL.Disable(EnableCap.Texture2D);
-            this.SwapBuffers();
-            fpsm.Update();
-            //fpsm.Draw();
         }
+        private void addLights() {
+            lights = new List<LightSource>();
+            LightSource pointLight = new LightSource(new Vector3(0.7f, 0.2f, 2.0f), LightSource.TYPE_POINT_LIGHT);
+            pointLight.Ambient = new Vector3(0.01f, 0.01f, 0.01f);
+            pointLight.Diffuse = new Vector3(0.1f, 0.1f, 0.1f);
+            pointLight.Specular = new Vector3(0.1f, 0.1f, 0.1f);
+            pointLight.Attenuation = new Vector3(1.0f, 0.14f, 0.07f);
+            lights.Add(pointLight);
+
+            pointLight = new LightSource(new Vector3(2.3f, -3.3f, -4.0f), LightSource.TYPE_POINT_LIGHT);
+            pointLight.Ambient = new Vector3(0.01f, 0.01f, 0.01f);
+            pointLight.Diffuse = new Vector3(0.1f, 0.1f, 0.1f);
+            pointLight.Specular = new Vector3(0.1f, 0.1f, 0.1f);
+            pointLight.Attenuation = new Vector3(1.0f, 0.14f, 0.07f);
+            lights.Add(pointLight);
+
+            pointLight = new LightSource(new Vector3(-4.0f, 2.0f, -12.0f), LightSource.TYPE_POINT_LIGHT);
+            pointLight.Ambient = new Vector3(0.01f, 0.01f, 0.01f);
+            pointLight.Diffuse = new Vector3(0.1f, 0.1f, 0.1f);
+            pointLight.Specular = new Vector3(0.1f, 0.1f, 0.1f);
+            pointLight.Attenuation = new Vector3(1.0f, 0.22f, 0.020f);
+            lights.Add(pointLight);
+
+            pointLight = new LightSource(new Vector3(0.0f, 0.0f, -3.0f), LightSource.TYPE_POINT_LIGHT);
+            pointLight.Ambient = new Vector3(0.03f, 0.01f, 0.01f);
+            pointLight.Diffuse = new Vector3(0.3f, 0.1f, 0.1f);
+            pointLight.Specular = new Vector3(0.3f, 0.1f, 0.1f);
+            pointLight.Attenuation = new Vector3(1.0f, 0.14f, 0.07f);
+            lights.Add(pointLight);
+
+            LightSource spotLight = new LightSource(new Vector3(0.0f, 0.0f, 5.0f), LightSource.TYPE_SPOT_LIGHT);
+            spotLight.Direction = new Vector3(0.0f, 0.0f, -1.0f);
+            spotLight.Ambient = new Vector3(0.0f, 0.0f, 0.0f);
+            spotLight.Diffuse = new Vector3(1.0f, 1.0f, 1.0f);
+            spotLight.Specular = new Vector3(1.0f, 1.0f, 1.0f);
+            spotLight.Attenuation = new Vector3(1.0f, 0.09f, 0.032f);
+            spotLight.CutOff = (float)Math.Cos(Math.PI * 10f / 180.0);
+            spotLight.outerCutOff = (float)Math.Cos(Math.PI * 15f / 180.0);
+            lights.Add(spotLight);
+
+            LightSource directionalLight = new LightSource(new Vector3(-0.2f, -1.0f, -0.3f), LightSource.TYPE_DIRECTIONAL_LIGHT);
+            directionalLight.Ambient = new Vector3(0.00f, 0.00f, 0.00f);
+            directionalLight.Diffuse = new Vector3(0.05f, 0.05f, 0.05f);
+            directionalLight.Specular = new Vector3(0.2f, 0.2f, 0.2f);
+            lights.Add(directionalLight);
+        }
+
 
         public override void Exit() {
             base.Exit();

@@ -154,7 +154,6 @@ namespace OpenGL_Test_Environment.GUI.shader {
             if (attributes.ContainsKey(attribute)) {
                 return attributes[attribute];
             } else {
-                logger.Error("Attribute not found: " + attribute);
                 return -1;
             }
         }
