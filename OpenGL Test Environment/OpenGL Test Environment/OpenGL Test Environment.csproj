@@ -81,11 +81,14 @@
     <Compile Include="GUI\content\OBJToMeshConverter.cs" />
     <Compile Include="GUI\content\OpenGLLoader.cs" />
     <Compile Include="GUI\data\FrameBufferObject.cs" />
+    <Compile Include="GUI\data\Scene.cs" />
     <Compile Include="GUI\data\Mesh.cs" />
     <Compile Include="GUI\data\VertexFloatBuffer.cs" />
     <Compile Include="GUI\input\Input.cs" />
+    <Compile Include="GUI\objects\Camera.cs" />
     <Compile Include="GUI\objects\LightSource.cs" />
     <Compile Include="GUI\OpenGLWindow.cs" />
+    <Compile Include="GUI\scenes\CrateScene.cs" />
     <Compile Include="GUI\shader\ScreenShader.cs" />
     <Compile Include="GUI\shader\SelectionShader.cs" />
     <Compile Include="GUI\shader\Shader.cs" />
