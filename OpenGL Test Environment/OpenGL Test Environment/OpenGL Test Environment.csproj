@@ -80,11 +80,13 @@
     <Compile Include="GUI\content\ContentManager.cs" />
     <Compile Include="GUI\content\OBJToMeshConverter.cs" />
     <Compile Include="GUI\content\OpenGLLoader.cs" />
+    <Compile Include="GUI\data\FrameBufferObject.cs" />
     <Compile Include="GUI\data\Mesh.cs" />
     <Compile Include="GUI\data\VertexFloatBuffer.cs" />
     <Compile Include="GUI\input\Input.cs" />
     <Compile Include="GUI\objects\LightSource.cs" />
     <Compile Include="GUI\OpenGLWindow.cs" />
+    <Compile Include="GUI\shader\ScreenShader.cs" />
     <Compile Include="GUI\shader\SelectionShader.cs" />
     <Compile Include="GUI\shader\Shader.cs" />
     <Compile Include="GUI\shader\LampShader.cs" />
@@ -100,12 +102,25 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="resources\CjClutter.ObjLoader.Loader.dll" />
+    <None Include="resources\model\quad\quad.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="resources\shader\screen\screen.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\shader\screen\screen.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="resources\shader\selection\selection.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="resources\shader\selection\selection.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="resources\textures\misc\window.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\textures\misc\emission.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -113,6 +128,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\textures\misc\crate.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\misc\grass.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\textures\nanosuit\arm_dif.png" />
@@ -139,9 +157,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="resources\model\nanosuit\nanosuit.mtl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="resources\model\nanosuit\nanosuit.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="resources\shader\lamp\lamp.frag">

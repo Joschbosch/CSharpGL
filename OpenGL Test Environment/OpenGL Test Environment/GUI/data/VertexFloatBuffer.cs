@@ -171,10 +171,10 @@ namespace OpenGL_Test_Environment.GUI.data {
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, id_vbo);
             int vertexPosition = shader.GetAttributeLocation("vertexPosition_modelspace");
-
             int vertexColor = shader.GetAttributeLocation("vertexColor");
             int vertexUV = shader.GetAttributeLocation("vertexUV");
             int vertexNormal = shader.GetAttributeLocation("vertex_normal");
+
             switch (Format) {
                 case VertexFormat.XY:
                     GL.EnableVertexAttribArray(vertexPosition);
@@ -290,7 +290,16 @@ namespace OpenGL_Test_Environment.GUI.data {
             vertex_data[vertex_position++] = x;
             vertex_data[vertex_position++] = y;
         }
+        public void AddVertex(float x, float y, float u, float v) {
+            if (Format != VertexFormat.XY_UV)
+                throw new FormatException("vertex must be of the same format type as buffer");
 
+            vertex_data[vertex_position++] = x;
+            vertex_data[vertex_position++] = y;
+
+            vertex_data[vertex_position++] = u;
+            vertex_data[vertex_position++] = v;
+        }
         public void AddVertex(float x, float y, float r, float g, float b, float a) {
             if (Format != VertexFormat.XY_COLOR)
                 throw new FormatException("vertex must be of the same format type as buffer");

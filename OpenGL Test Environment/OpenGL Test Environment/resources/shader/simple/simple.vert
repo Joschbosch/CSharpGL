@@ -19,5 +19,5 @@ void main(){
 	Normal = mat3(transpose(inverse(modelMatrix))) * vertex_normal; // INVERSION IS EXPENSIVE
 	FragPos = vec3(modelMatrix * vec4(vertexPosition_modelspace, 1.0f));
 	
-    TexCoords = vertexUV;
+    TexCoords = vec2(vertexUV.x, 1-vertexUV.y);
 }

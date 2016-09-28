@@ -47,6 +47,8 @@ namespace OpenGL_Test_Environment.GUI.content {
                         newVertex = new float[] { mesh.Triangles[i].X, mesh.Triangles[i].Y, mesh.Triangles[i].Z, mesh.Normals[i].X, mesh.Normals[i].Y, mesh.Normals[i].Z, mesh.UV[i].X, mesh.UV[i].Y };
                     } else if (format.Equals(VertexFormat.XYZ)) {
                         newVertex = new float[] { mesh.Triangles[i].X, mesh.Triangles[i].Y, mesh.Triangles[i].Z };
+                    } else if (format.Equals(VertexFormat.XYZ_UV)) {
+                        newVertex = new float[] { mesh.Triangles[i].X, mesh.Triangles[i].Y, mesh.Triangles[i].Z, mesh.UV[i].X, mesh.UV[i].Y };
                     } else {
                         newVertex = new float[] { };
                     }
