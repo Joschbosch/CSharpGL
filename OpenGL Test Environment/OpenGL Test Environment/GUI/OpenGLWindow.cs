@@ -38,7 +38,7 @@ namespace OpenGL_Test_Environment.GUI {
 
             // Move to ?
             fpsm = new FpsMonitor();
-            camera = new Camera(new Vector3(0.0f, 0.0f, 6.0f), new Quaternion(0, 0, 0), Width, Height);
+            camera = new Camera(new Vector3(0.0f, 2.0f, 6.0f), new Quaternion(0, 0, 0), Width, Height);
         }
 
         protected override void OnLoad(EventArgs e) {

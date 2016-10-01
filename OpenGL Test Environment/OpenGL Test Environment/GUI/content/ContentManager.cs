@@ -14,6 +14,7 @@ namespace OpenGL_Test_Environment.GUI.content {
 
         public static Bitmap loadImageResource(string path) {
             if (!File.Exists("resources/" + path)) {
+                logger.Error("Resource does not exist: resources/" + path);
                 throw new FileNotFoundException("Resource does not exist: resources/" + path);
             }
 

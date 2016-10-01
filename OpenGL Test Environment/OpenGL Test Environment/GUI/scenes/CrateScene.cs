@@ -28,7 +28,7 @@ namespace OpenGL_Test_Environment.GUI.scenes {
         private Shader selectionShader;
 
         private float rotationOverTime = 0f;
-
+        private Texture2D texture_floor;
 
         public void CreateScene() {
             logger.Info("Start loading scene 'crates' ...");
@@ -53,6 +53,12 @@ namespace OpenGL_Test_Environment.GUI.scenes {
             texture_emission.setWrapping(TextureWrapMode.MirroredRepeat);
             texture_grass = OpenGLLoader.loadTexture("misc/window.png");
             texture_grass.setWrapping(TextureWrapMode.MirroredRepeat);
+
+            texture_floor = OpenGLLoader.loadTexture("misc/marble_floor.bmp");
+            texture_floor.setWrapping(TextureWrapMode.MirroredRepeat);
+
+
+
             logger.Info("Adding lights to scene ...");
             addLights();
             logger.Info("Scene 'crate' created completly.");
@@ -80,12 +86,44 @@ namespace OpenGL_Test_Environment.GUI.scenes {
             selectionShader.LoadMatrix("projectionMatrix", camera.ProjectionMatrix);
             selectionShader.Stop();
 
-            drawCrates();
+            drawFloor();
             drawLightBulbs();
+            drawCrates();
+
 
             rotationOverTime += 0.01f;
 
 
+        }
+
+        private void drawFloor() {
+            VertexFloatBuffer floor = models["quad"];
+
+
+
+            objectShader.Start();
+            addLightInformation(lights, objectShader);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, texture_floor.ID);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, texture_floor.ID);
+
+            for (int i = 0; i < 70; i++) {
+                for (int j = 0; j < 70; j++) {
+                    Matrix4 translation = Matrix4.CreateTranslation(new Vector3(-35 + i, 0, -35 + j));
+                    Matrix4 rotation = Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), -1.57f);
+                    Matrix4 ModelMatrix = Matrix4.Identity;
+                    ModelMatrix = ModelMatrix * rotation;
+                    ModelMatrix = ModelMatrix * translation;
+
+                    objectShader.LoadMatrix("modelMatrix", ModelMatrix);
+
+                    floor.Bind(objectShader);
+
+                }
+            }
+
+            objectShader.Stop();
         }
 
         private void drawLightBulbs() {
@@ -96,13 +134,16 @@ namespace OpenGL_Test_Environment.GUI.scenes {
                     Matrix4 translation = Matrix4.CreateTranslation(lamp.Position);
                     Matrix4 scale = Matrix4.CreateScale(0.2f);
                     Matrix4 ModelMatrix = Matrix4.Identity;
+
                     ModelMatrix = Matrix4.Mult(ModelMatrix, scale);
                     ModelMatrix = Matrix4.Mult(ModelMatrix, translation);
                     lightShader.LoadMatrix("modelMatrix", ModelMatrix);
+                    objectShader.LoadUniform("material.diffuse", 0);
+                    objectShader.LoadUniform("material.specular", 1);
                     model.Bind(lightShader);
                 }
             }
-
+            lightShader.Stop();
         }
 
 
@@ -167,20 +208,24 @@ namespace OpenGL_Test_Environment.GUI.scenes {
 
             Matrix4 ModelMatrix = Matrix4.Identity;
             Vector3[] positions =
-                { new Vector3(), new Vector3(-2,-2,-2), new Vector3(-1,5,-3), new Vector3(-1,2,-4), new Vector3(2,-2,1) };
+                { new Vector3(0,0.5f,0), new Vector3(-2,0.5f,-2), new Vector3(-1,0.5f,-3), new Vector3(-1,0.5f,-4), new Vector3(2,0.5f,1) };
             Quaternion[] rotations =
                 { new Quaternion(0,0,0), new Quaternion(-2,-2,-2), new Quaternion(-1,1,-3), new Quaternion(-1,2,-4), new Quaternion(2,-2,1) };
 
             VertexFloatBuffer model = models["cube"];
             for (int i = 0; i < 5; i++) {
                 Matrix4 cubeTranslation = Matrix4.CreateTranslation(positions[i]);
-                Matrix4 rotation;
-                if (i % 2 == 1) {
-                    rotation = Matrix4.CreateFromQuaternion(rotations[i]);
-                } else {
-                    rotation = Matrix4.CreateFromQuaternion(Quaternion.Multiply(rotations[i], new Quaternion(rotationOverTime, 0, rotationOverTime)));
+                Matrix4 rotation = Matrix4.Identity;
+                bool onfloor = true;
+                if (!onfloor) {
+                    if (i % 2 == 0) {
+                        rotation = Matrix4.CreateFromQuaternion(rotations[i]);
+                    } else {
+                        rotation = Matrix4.CreateFromQuaternion(Quaternion.Multiply(rotations[i], new Quaternion(rotationOverTime, 0, rotationOverTime)));
 
+                    }
                 }
+
                 ModelMatrix = Matrix4.Identity;
                 ModelMatrix = Matrix4.Mult(ModelMatrix, rotation);
                 ModelMatrix = Matrix4.Mult(ModelMatrix, cubeTranslation);
@@ -195,7 +240,8 @@ namespace OpenGL_Test_Environment.GUI.scenes {
             model = models["quad"];
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, texture_grass.ID);
-            objectShader.LoadMatrix("modelMatrix", Matrix4.Identity);
+            Matrix4 modelMatrix = Matrix4.CreateTranslation(new Vector3(0, 1f, 0));
+            objectShader.LoadMatrix("modelMatrix", modelMatrix);
             objectShader.LoadUniform("material.diffuse", 0);
             objectShader.LoadUniform("material.specular", 0);
             objectShader.LoadUniform("material.emission", 0);
@@ -233,14 +279,14 @@ namespace OpenGL_Test_Environment.GUI.scenes {
         }
         private void addLights() {
             lights = new List<LightSource>();
-            LightSource pointLight = new LightSource(new Vector3(0.7f, 0.2f, 2.0f), LightSource.TYPE_POINT_LIGHT);
+            LightSource pointLight = new LightSource(new Vector3(0.7f, 2.2f, 2.0f), LightSource.TYPE_POINT_LIGHT);
             pointLight.Ambient = new Vector3(0.01f, 0.01f, 0.01f);
             pointLight.Diffuse = new Vector3(0.1f, 0.1f, 0.1f);
             pointLight.Specular = new Vector3(0.1f, 0.1f, 0.1f);
             pointLight.Attenuation = new Vector3(1.0f, 0.14f, 0.07f);
             lights.Add(pointLight);
 
-            pointLight = new LightSource(new Vector3(2.3f, -3.3f, -4.0f), LightSource.TYPE_POINT_LIGHT);
+            pointLight = new LightSource(new Vector3(2.3f, 3.3f, -4.0f), LightSource.TYPE_POINT_LIGHT);
             pointLight.Ambient = new Vector3(0.01f, 0.01f, 0.01f);
             pointLight.Diffuse = new Vector3(0.1f, 0.1f, 0.1f);
             pointLight.Specular = new Vector3(0.1f, 0.1f, 0.1f);
@@ -254,14 +300,14 @@ namespace OpenGL_Test_Environment.GUI.scenes {
             pointLight.Attenuation = new Vector3(1.0f, 0.22f, 0.020f);
             lights.Add(pointLight);
 
-            pointLight = new LightSource(new Vector3(0.0f, 0.0f, -3.0f), LightSource.TYPE_POINT_LIGHT);
+            pointLight = new LightSource(new Vector3(0.0f, 1.0f, -3.0f), LightSource.TYPE_POINT_LIGHT);
             pointLight.Ambient = new Vector3(0.03f, 0.01f, 0.01f);
             pointLight.Diffuse = new Vector3(0.3f, 0.1f, 0.1f);
             pointLight.Specular = new Vector3(0.3f, 0.1f, 0.1f);
             pointLight.Attenuation = new Vector3(1.0f, 0.14f, 0.07f);
             lights.Add(pointLight);
 
-            LightSource spotLight = new LightSource(new Vector3(0.0f, 0.0f, 5.0f), LightSource.TYPE_SPOT_LIGHT);
+            LightSource spotLight = new LightSource(new Vector3(0.0f, 1.0f, 5.0f), LightSource.TYPE_SPOT_LIGHT);
             spotLight.Direction = new Vector3(0.0f, 0.0f, -1.0f);
             spotLight.Ambient = new Vector3(0.0f, 0.0f, 0.0f);
             spotLight.Diffuse = new Vector3(1.0f, 1.0f, 1.0f);
@@ -271,7 +317,7 @@ namespace OpenGL_Test_Environment.GUI.scenes {
             spotLight.outerCutOff = (float)Math.Cos(Math.PI * 15f / 180.0);
             //lights.Add(spotLight);
 
-            LightSource directionalLight = new LightSource(new Vector3(-0.2f, -1.0f, -0.3f), LightSource.TYPE_DIRECTIONAL_LIGHT);
+            LightSource directionalLight = new LightSource(new Vector3(-0.2f, 1.0f, -0.3f), LightSource.TYPE_DIRECTIONAL_LIGHT);
             directionalLight.Ambient = new Vector3(0.00f, 0.00f, 0.00f);
             directionalLight.Diffuse = new Vector3(0.05f, 0.05f, 0.05f);
             directionalLight.Specular = new Vector3(0.2f, 0.2f, 0.2f);
